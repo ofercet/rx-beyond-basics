@@ -6,7 +6,8 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
-    "rxjs": "^5"
+    "rxjs": "^5",
+    "sentiment": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
