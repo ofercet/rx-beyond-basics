@@ -1,18 +1,31 @@
-const WebSocket = require('ws');
-const twitterStream = require('./twitterStream');
+import WebSocket from 'ws';
+import url from 'url';
+import {getTwitterStream} from './twitterStream';
 
-module.exports = function attachWebsockets(server) {
+export function attachWebsockets(server) {
     const wss = new WebSocket.Server({
         server,
         path: '/tweets',
     });
 
-    wss.on('connection', ws => {
-        const subscription = twitterStream('tech')
-            .map(JSON.stringify)
-            .do(msg => ws.send(msg))
-            .subscribe();
+    wss.on('connection', (ws, req) => {
+        const requestUrl = url.parse(req.url, true);
+        const track = requestUrl.query.track;
 
-        ws.on('close', () => subscription.unsubscribe());
+        if (!track) {
+            console.log('Connection rejected');
+            ws.close(4000, 'Missing query param "track"');
+            return;
+        }
+
+        console.log('Connection established, tracking:', track);
+        const subscription = getTwitterStream(track)
+            .map(JSON.stringify)
+            .subscribe(msg => ws.send(msg));
+
+        ws.on('close', () => {
+            console.log('Connection terminated');
+            subscription.unsubscribe();
+        });
     });
-};
+}

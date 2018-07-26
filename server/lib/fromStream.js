@@ -1,6 +1,6 @@
-const {Observable} = require('rxjs');
+import {Observable} from 'rxjs';
 
-module.exports = function fromStream(stream, {data, close, error}) {
+export function fromStream(stream, {data, close, error}) {
     return Observable.merge(
         Observable.fromEvent(stream, data),
         Observable.fromEvent(stream, close).switchMapTo(Observable.empty()),

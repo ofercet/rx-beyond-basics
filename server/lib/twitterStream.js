@@ -1,8 +1,8 @@
-const Twitter = require('twitter-stream-api');
-const {Observable} = require('rxjs');
-const fromStream = require('./fromStream');
+import Twitter from 'twitter-stream-api';
+import {Observable} from 'rxjs';
+import {fromStream} from './fromStream';
 
-module.exports = function getTwitterStream(track) {
+export function getTwitterStream(track) {
     return Observable.create(observer => {
         const twitter = new Twitter({
             consumer_key: 'VvhR3HpB1fZJHs9KkSK2Ni5ac',
