@@ -2,6 +2,7 @@ import {observable, decorate} from 'mobx';
 
 class Tweets {
     tweets = [];
+    count = 0;
 
     printTweet(tweet_raw) {
         try {
@@ -12,10 +13,15 @@ class Tweets {
             console.error('printTweet error', err);
         }
     }
+
+    printTweetCount(count) {
+        this.count = count;
+    }
 }
 
 decorate(Tweets, {
     tweets: observable,
+    count: observable,
 });
 
 export default new Tweets();
