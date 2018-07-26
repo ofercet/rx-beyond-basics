@@ -21,7 +21,7 @@ export function attachWebsockets(server) {
         console.log('Connection established, tracking:', track);
         const subscription = getTwitterStream(track)
             .map(JSON.stringify)
-            .subscribe(msg => ws.send(msg));
+            .subscribe(msg => ws.readyState === WebSocket.OPEN && ws.send(msg));
 
         ws.on('close', () => {
             console.log('Connection terminated');
