@@ -7,7 +7,7 @@ import './App.css';
 function getWebsocket(destination) {
     return new Observable(observer => {
         const ws = new WebSocket(destination);
-        
+
         ws.onmessage = val => observer.next(val.data);
         ws.onerror = err => observer.error(err);
         ws.onclose = () => observer.complete();
@@ -28,6 +28,8 @@ class App extends Component {
             tweets: [],
             isConnected: false,
             count: 0,
+            positiveCount: 0,
+            negativeCount: 0,
         };
     }
 
@@ -39,19 +41,33 @@ class App extends Component {
             .map(JSON.parse)
             .repeat()
             .retry()
-            .share();
-
-        this.subscription = ws
+            .share()
             .map(tweet => ({
                 ...tweet,
                 score: this.sentiment.analyze(tweet.text).score,
+            }));
+
+        this.subscription = ws.subscribe(tweet =>
+            this.setState(state => ({
+                count: state.count + 1,
+                tweets: [tweet, ...state.tweets].slice(0, 50),
             }))
-            .subscribe(tweet =>
-                this.setState(state => ({
-                    count: state.count + 1,
-                    tweets: [tweet, ...state.tweets].slice(0, 50),
-                }))
-            );
+        );
+        const [positive, negative] = ws.partition(tweet => tweet.score >= 0);
+        this.subscription.add(
+            positive.scan(count => count + 1, this.state.positiveCount).subscribe(count =>
+                this.setState({
+                    positiveCount: count,
+                })
+            )
+        );
+        this.subscription.add(
+            negative.scan(count => count + 1, this.state.negativeCount).subscribe(count =>
+                this.setState({
+                    negativeCount: count,
+                })
+            )
+        );
     }
 
     stop() {
@@ -78,11 +94,13 @@ class App extends Component {
                     <h1 className="App-title">Welcome to React</h1>
                 </header>
                 <p className="App-intro">
+                    <span className="positive">{this.state.positiveCount} </span>
                     {this.state.isConnected ? (
-                        <span className="Monitor-connected">CONNECTED</span>
+                        <span className="positive">CONNECTED</span>
                     ) : (
-                        <span className="Monitor-disconnected">DISCONNECTED</span>
+                        <span className="neutral">DISCONNECTED</span>
                     )}
+                    <span className="negative"> {this.state.negativeCount}</span>
                     <br />
                     <button onClick={this.start}>Start</button>
                     <button onClick={this.stop}>Stop</button>
@@ -90,7 +108,7 @@ class App extends Component {
                 <span>{this.state.count}</span>
                 <div style={{textAlign: 'left', marginLeft: '15%'}}>
                     {this.state.tweets.map((tweet, i) => (
-                        <span key={i.toString()} style={{color: tweet.score > 0 ? 'green' : 'red'}}>
+                        <span key={i.toString()} className={tweet.score > 0 ? 'positive' : 'negative'}>
                             {tweet.text}
                             <br />
                         </span>

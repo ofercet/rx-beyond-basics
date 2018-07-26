@@ -31,10 +31,14 @@
     }
 }
 
-.Monitor-connected {
+.positive {
     color: green;
 }
 
-.Monitor-disconnected {
+.negative {
     color: red;
+}
+
+.neutral {
+    color: gray;
 }
