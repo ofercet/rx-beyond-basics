@@ -1,26 +1,31 @@
-import {observable, decorate} from 'mobx';
+import {observable, decorate, computed} from 'mobx';
 
 class WebSocketStore {
-    count = 0;
-
-    increment() {
-        this.count++;
+    websockets = new Map();
+    
+    get count() {
+        return this.websockets.size;
     }
 
-    decrement() {
-        this.count--;
+    add(ws) {
+        this.websockets.set(ws);
+    }
+
+    remove(ws) {
+        this.websockets.delete(ws);
     }
 }
 
 decorate(WebSocketStore, {
-    count: observable,
+    websockets: observable,
+    count: computed
 });
 
 export const Store = new WebSocketStore();
 
 export default function(...args) {
     const ws = new WebSocket(...args);
-    ws.addEventListener('open', () => Store.increment());
-    ws.addEventListener('close', () => Store.decrement());
+    ws.addEventListener('open', () => Store.add(ws));
+    ws.addEventListener('close', () => Store.remove(ws));
     return ws;
 }

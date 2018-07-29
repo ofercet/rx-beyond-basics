@@ -14,6 +14,6 @@ function getWebsocket(destination) {
     });
 }
 
-const tweet$ = getWebsocket('ws://localhost:8080/tweets?track=trump').take(20);
+const tweet$ = getWebsocket('ws://localhost:8080/tweets?track=trump');
 tweet$.subscribe(tweet => TweetStore.printTweet(tweet));
 tweet$.scan(count => count + 1, 0).subscribe(count => TweetStore.printTweetCount(count));
