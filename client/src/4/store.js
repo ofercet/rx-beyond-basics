@@ -2,7 +2,7 @@ import {observable, decorate} from 'mobx';
 
 class Tweets {
     tweets = [];
-    count;
+    count = 0;
 
     printTweet(tweet_raw) {
         try {

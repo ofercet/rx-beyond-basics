@@ -15,4 +15,11 @@ function getWebsocket(destination) {
 }
 
 const tweet$ = getWebsocket('ws://localhost:8080/tweets?track=trump');
-tweet$.subscribe(tweet => TweetStore.printTweet(tweet));
+let count = 0;
+const subscription = tweet$.subscribe(tweet => {
+    if (count++ < 20) {
+        TweetStore.printTweet(tweet);
+    } else {
+        subscription.unsubscribe();
+    }
+});

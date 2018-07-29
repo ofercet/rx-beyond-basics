@@ -1,6 +1,7 @@
 import WebSocket from '../WebSocket';
 import {Observable} from 'rxjs';
 import TweetStore from './store';
+import {getTweetScore} from '../sentiment';
 
 function getWebsocket(destination) {
     return new Observable(observer => {
@@ -14,5 +15,9 @@ function getWebsocket(destination) {
     });
 }
 
-const tweet$ = getWebsocket('ws://localhost:8080/tweets?track=trump');
+const tweet$ = getWebsocket('ws://localhost:8080/tweets?track=love')
+    .map(JSON.parse)
+    .map(tweet => ({...tweet, score: getTweetScore(tweet)}))
+    .share();
 tweet$.subscribe(tweet => TweetStore.printTweet(tweet));
+tweet$.scan(count => count + 1, 0).subscribe(count => TweetStore.printTweetCount(count));
