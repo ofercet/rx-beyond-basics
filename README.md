@@ -18,13 +18,16 @@ It's hard to follow the map, use interval or buffer to display each 10 seconds t
 
 
 
-1
+1 basic tweets
+
 2 count + unsubscribe
-2 add take
+add take
+
 3 count ui
-3 show two connections
-3 add share
-3 show one connection
+show two connections
+add share
+show one connection
+
 4 sentiment per tweet
-4 add sampleTime(200) to slow everything down
-4 demonstrate server restarts add repeat&retry
+add sampleTime(200) to slow everything down
+demonstrate server restarts add repeat&retry
