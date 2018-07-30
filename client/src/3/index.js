@@ -6,7 +6,7 @@ import './show';
 
 const App = observer(() => (
     <div className="App-intro">
-        {TweetStore.count && 'Tweet count ' + TweetStore.count}
+        {TweetStore.count && <span className="tweet-count">Tweet count {TweetStore.count}</span>}
         <div className="tweet-container">
             {TweetStore.tweets.map((tweet, i) => (
                 <span key={i.toString()}>
