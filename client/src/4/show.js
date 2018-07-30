@@ -1,5 +1,4 @@
 import {createWebsocketObservable} from '../WebSocket';
-import {Observable} from 'rxjs';
 import TweetStore from './store';
 import {getTweetScore} from '../sentiment';
 

@@ -1,5 +1,4 @@
 import {createWebsocketObservable} from '../WebSocket';
-import {Observable} from 'rxjs';
 import TweetStore from './store';
 
 const tweet$ = createWebsocketObservable('ws://localhost:8080/tweets?track=trump');
