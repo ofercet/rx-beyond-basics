@@ -10,7 +10,7 @@ const App = observer(() => (
         <br />
         <div className="tweet-container">
             {TweetStore.tweets.map((tweet, i) => (
-                <span key={i.toString()} className={tweet.score >= 0 ? 'positive' : 'negative'}>
+                <span key={i.toString()} className={tweet.score ? 'positive' : 'negative'}>
                     {tweet.text}
                     <br />
                 </span>
